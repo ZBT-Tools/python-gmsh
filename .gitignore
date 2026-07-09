@@ -1,0 +1,45 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+
+# Pytest caches and temporary test directories
+.pytest_cache/
+pytest-cache-files-*/
+helix_mesh/.tmp-test-export-avl-*/
+
+# Local agent/tooling folders
+.agents/
+
+# Generated output directories
+outputs/
+
+# Generated debug plots
+debug_cross_section.png
+debug_cross_section_mesh.png
+debug_3d_preview.png
+preview_*.png
+
+# Generated mesh and conversion artifacts
+*.intermediate.msh
+helix_pipe_structured.msh
+helix_pipe_structured_full.msh
+helix_pipe_multidomain.cgns
+helix_pipe_fluid_only.cgns
+helix_default.cgns
+helix_flip_i.cgns
+helix_flip_k.cgns
+helix_reverse.cgns
+raw_named_test.cgns
+fresh_named_test.cgns
+fresh_named_safe.cgns
+cleanup_probe.cgns
+avl_stable_raw.cgns
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
