@@ -30,6 +30,10 @@ helix_pipe_structured.msh
 helix_pipe_structured_full.msh
 helix_pipe_multidomain.cgns
 helix_pipe_fluid_only.cgns
+structured_geometry.msh
+structured_geometry_full.msh
+geometry_multidomain.cgns
+geometry_flip_i.cgns
 helix_default.cgns
 helix_flip_i.cgns
 helix_flip_k.cgns

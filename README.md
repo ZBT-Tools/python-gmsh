@@ -1,6 +1,9 @@
-# Helix Mesh
+# Structured Geometry Mesh Framework
 
-This project builds a structured hexahedral mesh for a twisted pipe with three trapezoidal ribs.
+This repository is organized as a geometry-extensible meshing framework.
+The primary package is `mesh_framework`, and the currently implemented geometry type is `helix_pipe`.
+
+The legacy `helix_mesh` folder is kept as a compatibility layer around the original helix implementation, but the main public naming and entrypoints now live under the generic framework API.
 
 The implementation currently covers:
 
@@ -12,7 +15,7 @@ The implementation currently covers:
 
 ## Topology Overview
 
-The corrected cross-section uses 18 quadrilateral patches:
+For the current `helix_pipe` geometry, the corrected cross-section uses 18 quadrilateral patches:
 
 - 6 inner fluid patches
 - 6 outer fluid gap patches
@@ -58,7 +61,7 @@ The script supports six output modes:
 
 You can choose the mode either:
 
-- in [parameters.json](/D:/Software/Python/python-gmsh/helix_mesh/parameters.json:1) via `output_mode`
+- in [parameters.json](/D:/Software/Python/python-gmsh/mesh_framework/parameters.json:1) via `output_mode`
 - or via CLI flags, which take precedence
 
 ## Current Export Behavior
@@ -110,14 +113,15 @@ The project keeps the intended engineering names embedded in that scheme, but do
 
 ## Parameters File
 
-The default parameter file is [parameters.json](/D:/Software/Python/python-gmsh/helix_mesh/parameters.json:1) inside the `helix_mesh` folder.
+The default configuration file is [parameters.json](/D:/Software/Python/python-gmsh/mesh_framework/parameters.json:1) inside the `mesh_framework` folder.
 
-The script now uses `parameters.json` not only for geometry and meshing, but also for optional export settings such as:
+The framework now uses `parameters.json` not only for geometry and meshing, but also for optional export settings such as:
 
 - output mode
 - output file name
 - CGNS export settings
 - AVL hex-order selection
+- geometry type selection
 
 CLI arguments can still override individual values.
 
@@ -145,7 +149,12 @@ CLI arguments can still override individual values.
 - `strip_cgns_prefixes`
   Experimental CGNS post-processing flag; currently not recommended for AVL
 
-#### Geometry
+#### Geometry Selection
+
+- `geometry_type`
+  Currently supported values: `helix_pipe`
+
+#### Helix Geometry Parameters
 
 - `r_pipe`
 - `length`
@@ -179,8 +188,9 @@ CLI arguments can still override individual values.
 
 ```json
 {
+  "geometry_type": "helix_pipe",
   "output_mode": "export_avl_cgns",
-  "outfile": "helix_pipe_multidomain.cgns",
+  "outfile": "geometry_multidomain.cgns",
   "fluid_only": false,
   "gmsh_exe": "gmsh",
   "keep_intermediate": false,
@@ -256,37 +266,37 @@ This overrides the JSON `outfile` for the currently selected mode.
 ### Use only `parameters.json`
 
 ```powershell
-.\.venv\Scripts\python.exe .\helix_mesh\helix_mesh.py
+.\.venv\Scripts\python.exe .\generate_mesh.py
 ```
 
 ### Write a fluid-only Gmsh mesh
 
 ```powershell
-.\.venv\Scripts\python.exe .\helix_mesh\helix_mesh.py --export-gmsh helix_pipe_structured.msh
+.\.venv\Scripts\python.exe .\generate_mesh.py --export-gmsh structured_geometry.msh
 ```
 
 ### Write the full multi-domain Gmsh mesh
 
 ```powershell
-.\.venv\Scripts\python.exe .\helix_mesh\helix_mesh.py --export-gmsh-full helix_pipe_structured_full.msh
+.\.venv\Scripts\python.exe .\generate_mesh.py --export-gmsh-full structured_geometry_full.msh
 ```
 
 ### Write the stable AVL CGNS export
 
 ```powershell
-.\.venv\Scripts\python.exe .\helix_mesh\helix_mesh.py --export-avl-cgns helix_pipe_multidomain.cgns
+.\.venv\Scripts\python.exe .\generate_mesh.py --export-avl-cgns geometry_multidomain.cgns
 ```
 
 ### Keep the intermediate MSH for inspection
 
 ```powershell
-.\.venv\Scripts\python.exe .\helix_mesh\helix_mesh.py --export-avl-cgns helix_pipe_multidomain.cgns --keep-intermediate
+.\.venv\Scripts\python.exe .\generate_mesh.py --export-avl-cgns geometry_multidomain.cgns --keep-intermediate
 ```
 
 ### Run an AVL orientation variant
 
 ```powershell
-.\.venv\Scripts\python.exe .\helix_mesh\helix_mesh.py --export-avl-cgns helix_flip_i.cgns --hex-order flip_i --keep-intermediate
+.\.venv\Scripts\python.exe .\generate_mesh.py --export-avl-cgns geometry_flip_i.cgns --hex-order flip_i --keep-intermediate
 ```
 
 ## Physical Names and Domains
@@ -337,13 +347,13 @@ gmsh -version
 Inspect a Gmsh mesh:
 
 ```powershell
-gmsh helix_pipe_structured.msh
+gmsh structured_geometry.msh
 ```
 
 OpenFOAM-side check, if available:
 
 ```bash
-gmshToFoam helix_pipe_structured.msh
+gmshToFoam structured_geometry.msh
 checkMesh
 ```
 
